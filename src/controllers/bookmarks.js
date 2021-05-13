@@ -9,7 +9,7 @@ const bookmarks = {
   // delete a bookmark by url
   delete: async (req, res, db) => {
     const { url } = req.body;
-    const result = await db.deleteBookmark(url);
+    await db.deleteBookmark(url);
 
     return {
       message: "deleted"
@@ -17,7 +17,7 @@ const bookmarks = {
   },
   // create bookmark
   create: async (req, res, db) => {
-    const { url } = req.body;
+    const { url, is_link } = req.body;
     const dm = req.body.dm;
 
     // check if bookmark exists
@@ -30,7 +30,7 @@ const bookmarks = {
     }
 
     try {
-      const bookmark = await metadata.get(url);
+      const bookmark = is_link ? await metadata.get(url) : {};
 
       const response = await db.createBookmark({
         ...dm,

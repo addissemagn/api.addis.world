@@ -78,15 +78,19 @@ router.post("/webhook/twitter", async (req, res) => {
     // accept valid sender
     if (sender_id == process.env.VALID_SENDER_ID) {
       // extract bookmark info from DM
+      const url =
+        message_data.entities.urls.length > 0
+          ? message_data.entities.urls[0].expanded_url
+          : "";
+
       const bookmark = {
         text: formatText(message_data.text),
         hashtags: message_data.entities.hashtags
           .filter((h) => h != null)
           .map((h) => h.text),
-        url:
-          message_data.entities.urls.length > 0
-            ? message_data.entities.urls[0].expanded_url
-            : "",
+        url: url,
+        is_link: url != "",
+        is_media: message_data.attachment && message_data.attachment.type == 'media'
       };
 
       // check for delete command
@@ -109,6 +113,7 @@ router.post("/webhook/twitter", async (req, res) => {
       const request = {
         body: {
           url: bookmark.url,
+          is_link: bookmark.url != "",
           dm: bookmark,
         },
       };

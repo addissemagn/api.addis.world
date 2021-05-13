@@ -1,6 +1,6 @@
 const fetch = require("node-fetch"),
   cheerio = require("cheerio"),
-  { formatUrl } = require("../utils");
+  { formatImageUrl } = require("../utils");
 
 const metadata = {
   // extract metadata from a url
@@ -34,8 +34,8 @@ const metadata = {
         description,
         site_name,
         // convert into absolute urls
-        image: formatUrl(url, image),
-        icon: formatUrl(url, icon),
+        image: formatImageUrl(url, image),
+        icon: formatImageUrl(url, icon),
         keywords,
       };
 
